@@ -10,7 +10,7 @@ dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
     mappings loom.layered() {
         officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-1.19.3:2023.02.05@zip")
+        parchment("org.parchmentmc.data:parchment-1.20.1:2023.07.16@zip")
     }
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
@@ -19,8 +19,6 @@ dependencies {
 }
 
 loom {
-//    accessWidenerPath = project(":Common").file("src/main/resources/modid.accesswidener")
-
     runs {
         client {
             client()
@@ -35,8 +33,17 @@ loom {
             runDir("run")
         }
     }
+
+    mixin {
+        defaultRefmapName = "waxedicons.refmap.json"
+    }
 }
 
+dependencies {
+    modRuntimeOnly("com.github.llamalad7.mixinextras:mixinextras-fabric:0.2.0-beta.9")
+    modRuntimeOnly("mysticdrew:common-networking-fabric:1.0.1-1.20.1")
+    modImplementation("dev.dhyces.trimmed:trimmed-fabric-1.20.1:2.1.0")
+}
 
 processResources {
     from project(":Common").sourceSets.main.resources

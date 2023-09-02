@@ -1,16 +1,5 @@
 plugins {
-    id 'com.matyrobbrt.mc.registrationutils' version "${registration_utils}"
     id 'org.groovymc.modsdotgroovy' version "${mods_dot_groovy_version}"
-}
-
-registrationUtils {
-    group 'dhyces.modhelper.registration'
-    projects {
-        Fabric { type 'fabric' }
-        Quilt { type 'fabric' }
-        Forge { type 'forge' }
-        Common { type 'common' }
-    }
 }
 
 modsDotGroovy {
@@ -72,6 +61,20 @@ subprojects {
             name = 'BlameJared Maven (CrT / Bookshelf)'
             url = 'https://maven.blamejared.com'
         }
+
+        maven {
+            url = "https://jm.gserv.me/repository/maven-public/"
+        }
+
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/dhyces/trimmed")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+            }
+        }
+        maven { url = "https://jitpack.io/" }
     }
 
     dependencies {
@@ -88,7 +91,6 @@ subprojects {
     // metadata includes mapped dependencies which are not reasonably consumable by
     // other mod developers.
     tasks.withType(GenerateModuleMetadata) {
-
         enabled = false
     }
 }

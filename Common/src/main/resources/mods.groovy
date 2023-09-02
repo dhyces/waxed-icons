@@ -2,7 +2,7 @@ ModsDotGroovy.make {
     def modid = this.buildProperties["mod_id"]
 
     modLoader = "javafml"
-    loaderVersion = "[${(this.buildProperties["forge_version"] as String).split("\\.")[0]},)"
+    loaderVersion = "[${(this.buildProperties["min_forge_version"] as String).split("\\.")[0]},)"
 
     license = "MIT"
     issueTrackerUrl = ""
@@ -14,35 +14,38 @@ ModsDotGroovy.make {
         group = this.group
         authors = [this.buildProperties["mod_author"] as String]
 
-        displayUrl = ""
-        sourcesUrl = ""
+        displayUrl = "example.com"
+//        sourcesUrl = "example.com"
         logoFile = "logo.png"
         description = ""
 
-        onFabricAndQuilt {
+        onFabric {
             entrypoints {
-                main = ""
-                client = ""
+                client = "dhyces.waxedicons.FabricWaxedIconsClient"
             }
         }
 
         onQuilt {
+            entrypoints {
+                client = "dhyces.waxedicons.QuiltWaxedIconsClient"
+            }
             intermediateMappings = "net.fabricmc:intermediary"
         }
 
         dependencies {
+            def mcVersionRange = "[1.20,1.20.2)"
             onForge {
-                minecraft = this.minecraftVersionRange
-                forge = "[${this.forgeVersion},)"
+                minecraft = mcVersionRange
+                forge = "[46,)"
             }
 
             onFabric {
-                minecraft = this.minecraftVersion
+                minecraft = mcVersionRange
                 fabricloader = ">=${this.fabricLoaderVersion}"
             }
 
             onQuilt {
-                minecraft = this.minecraftVersion
+                minecraft = mcVersionRange
                 quilt_loader = ">=${this.quiltLoaderVersion}"
                 quilted_fabric_api = ">=${this.buildProperties["quilted_fabric_version"]}"
                 quilt_base = ">=${this.buildProperties["qsl_version"]}"

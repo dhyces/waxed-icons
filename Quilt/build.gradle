@@ -37,6 +37,9 @@ dependencies {
 		exclude group: "net.fabricmc"
 	}
 
+    modRuntimeOnly 'mysticdrew:common-networking:1.0.0+1.20-fabric'
+    modImplementation("dev.dhyces.trimmed:trimmed-fabric-1.20:2.0.0")
+
 //    modImplementation "org.quiltmc.qsl:core:${qsl_version}+${minecraft_version}"
 //    modImplementation "org.quiltmc.qsl:gui:${qsl_version}+${minecraft_version}"
 //    modImplementation "org.quiltmc.qsl.data:tags:${qsl_version}+${minecraft_version}"
