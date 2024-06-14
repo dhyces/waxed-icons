@@ -1,0 +1,74 @@
+import org.groovymc.modsdotgroovy.gradle.tasks.AbstractGatherPlatformDetailsTask
+
+plugins {
+    id 'idea'
+    id 'maven-publish'
+    id "consumer.conventions"
+    alias(libs.plugins.mdg)
+    alias(libs.plugins.archloom)
+}
+
+base {
+    archivesName = "${mod_name}-neo-${libs.versions.minecraft.release.get()}"
+}
+
+modsDotGroovy {
+    platform(org.groovymc.modsdotgroovy.types.core.Platform.NEOFORGE)
+    inferGather.set(false)
+    multiplatform {
+        from(":common")
+    }
+    apply()
+}
+
+tasks.named("gatherNeoForgePlatformDetails", AbstractGatherPlatformDetailsTask).configure {
+    minecraftVersion = libs.versions.minecraft.release
+    platformVersion = libs.versions.neoforge.release
+}
+
+loom {
+    neoForge {
+        if (Boolean.parseBoolean(at_enabled)) {
+            accessTransformer(project(":common").file("src/main/resources/META-INF/accessTransformer.cfg"))
+        }
+    }
+
+    runs {
+        configureEach {
+            ideConfigGenerated(true)
+            runDir("run")
+        }
+
+        client {
+            client()
+            setConfigName("Neo Client")
+        }
+        server {
+            server()
+            setConfigName("Neo Server")
+        }
+        data {
+            data()
+            setConfigName("Neo Data")
+
+            programArgs('--mod', project.mod_id, '--all', '--output', project(":common").file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath())
+        }
+    }
+}
+
+repositories {
+    maven {
+        name = 'Neo'
+        url = 'https://maven.neoforged.net/releases'
+    }
+}
+
+dependencies {
+    minecraft libs.minecraft
+    neoForge libs.neoforge
+    mappings loom.layered() {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-${libs.versions.parchment.minecraft.get()}:${libs.versions.parchment.release.get()}@zip")
+    }
+    modImplementation libs.trimmed.neo
+}

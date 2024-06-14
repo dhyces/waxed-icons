@@ -2,26 +2,27 @@ pluginManagement {
     repositories {
         gradlePluginPortal()
         maven {
-            name = 'Forge'
-            url = 'https://maven.minecraftforge.net/'
-        }
-        maven {
             name = 'Fabric'
             url = 'https://maven.fabricmc.net/'
-        }
-        maven {
-            name = 'Quilt'
-            url = 'https://maven.quiltmc.org/repository/release'
         }
         maven {
             name = 'Sponge Snapshots'
             url = 'https://repo.spongepowered.org/repository/maven-public/'
         }
         maven {
+            name = 'ParchmentMC'
             url = 'https://maven.parchmentmc.org'
+        }
+        maven {
+            name = 'Architectury'
+            url = "https://maven.architectury.dev/"
         }
     }
 }
 
+plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention") version ("0.8.0")
+}
+
 rootProject.name = 'WaxedIcons'
-include("Common", "Fabric", "Forge", "Quilt")
+include("common", "fabric", "neo", /*"quilt"*/)

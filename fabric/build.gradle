@@ -1,0 +1,66 @@
+import org.groovymc.modsdotgroovy.gradle.tasks.AbstractGatherPlatformDetailsTask
+
+plugins {
+    id 'idea'
+    id 'maven-publish'
+    id "consumer.conventions"
+    alias(libs.plugins.archloom)
+    alias(libs.plugins.mdg)
+}
+
+base {
+    archivesName = "${mod_name}-fabric-${libs.versions.minecraft.release.get()}"
+}
+
+modsDotGroovy {
+    platform(org.groovymc.modsdotgroovy.types.core.Platform.FABRIC)
+    inferGather.set(false)
+    multiplatform {
+        from(":common")
+    }
+    apply()
+}
+
+tasks.named("gatherFabricPlatformDetails", AbstractGatherPlatformDetailsTask).configure {
+    minecraftVersion = libs.versions.minecraft.release
+    platformVersion = libs.versions.fabric.loader
+}
+
+loom {
+    if (Boolean.parseBoolean(at_enabled)) {
+        accessWidenerPath = project(":common").file("src/main/resources/${mod_id}.accesswidener")
+    }
+
+    if (Boolean.parseBoolean(common_mixin_enabled) || Boolean.parseBoolean(fabric_mixin_enabled)) {
+        mixin {
+            defaultRefmapName = "${mod_id}.refmap.json"
+        }
+    }
+
+    runs {
+        configureEach {
+            ideConfigGenerated(true)
+            runDir("run")
+        }
+        client {
+            client()
+            setConfigName("Fabric Client")
+        }
+        server {
+            server()
+            setConfigName("Fabric Server")
+        }
+    }
+}
+
+dependencies {
+    minecraft libs.minecraft
+    mappings loom.layered() {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-${libs.versions.parchment.minecraft.get()}:${libs.versions.parchment.release.get()}@zip")
+    }
+    modImplementation libs.fabric.loader
+    modImplementation libs.fabric.api
+
+    modImplementation libs.trimmed.fabric
+}

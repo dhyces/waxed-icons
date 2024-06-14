@@ -1,0 +1,80 @@
+plugins {
+    id "shared.conventions"
+    alias(libs.plugins.mdg)
+    alias(libs.plugins.archloom)
+}
+
+base {
+    archivesName = "${mod_name}-common-${libs.versions.minecraft.release.get()}"
+}
+
+modsDotGroovy {
+    multiplatform {
+        gather {
+            projectProperty("mod_id")
+            projectProperty("mod_name")
+            projectProperty("authors")
+            projectProperty("at_enabled")
+            projectProperty("common_mixin_enabled")
+            projectProperty("fabric_mixin_enabled")
+            projectProperty("neoforge_mixin_enabled")
+        }
+        expose()
+    }
+}
+
+configurations {
+    commonJava {
+        canBeResolved = false
+        canBeConsumed = true
+    }
+    commonResources {
+        canBeResolved = false
+        canBeConsumed = true
+    }
+    testCompileOnly.extendsFrom(compileOnly)
+}
+
+loom {
+    if (Boolean.parseBoolean(at_enabled)) {
+        accessWidenerPath = file("src/main/resources/${mod_id}.accesswidener")
+    }
+
+    if (Boolean.parseBoolean(common_mixin_enabled)) {
+        mixin {
+            defaultRefmapName = "${mod_id}.refmap.json"
+        }
+    }
+
+    runs.configureEach {
+        ideConfigGenerated = false
+    }
+}
+
+dependencies {
+    minecraft libs.minecraft
+    mappings loom.layered() {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-${libs.versions.parchment.minecraft.get()}:${libs.versions.parchment.release.get()}@zip")
+    }
+
+    modCompileOnly libs.mixinextras.common
+    modCompileOnly libs.fabric.loader
+
+    modCompileOnly libs.trimmed.common
+}
+
+artifacts {
+    commonJava sourceSets.main.java.sourceDirectories.singleFile
+    sourceSets.main.resources.sourceDirectories.forEach {
+        commonResources it
+    }
+}
+
+sourceSets.main.resources.srcDir 'src/generated/resources'
+
+idea {
+    module {
+        inheritOutputDirs = false
+    }
+}
