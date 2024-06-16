@@ -64,14 +64,14 @@ dependencies {
     modCompileOnly libs.trimmed.common
 }
 
+sourceSets.main.resources.srcDir 'src/generated/resources'
+
 artifacts {
     commonJava sourceSets.main.java.sourceDirectories.singleFile
     sourceSets.main.resources.sourceDirectories.forEach {
         commonResources it
     }
 }
-
-sourceSets.main.resources.srcDir 'src/generated/resources'
 
 idea {
     module {
