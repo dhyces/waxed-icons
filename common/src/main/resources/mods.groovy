@@ -30,7 +30,7 @@ MultiplatformModsDotGroovy.make {
 
         displayUrl = "https://modrinth.com/mod/waxed-icons"
         sourcesUrl = "https://github.com/dhyces/waxed-icons"
-        logoFile = "assets/${modid}/logo.png"
+        logoFile = "assets/${modid}/icon.png"
         description = "Adds wax icons on waxed block items in inventories"
 
         onFabric {
