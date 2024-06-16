@@ -25,7 +25,7 @@ tasks.named("compileJava", JavaCompile) {
 processResources {
     dependsOn(configurations.commonResources)
     from(configurations.commonResources)
-    exclude("mods.groovy")
+    exclude("mods.groovy", ".cache")
 }
 
 tasks.named("javadoc", Javadoc) {
